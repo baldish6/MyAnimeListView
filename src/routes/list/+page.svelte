@@ -1,11 +1,66 @@
 <script lang="ts">
 	import type { PageProps } from './$types';
-	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
+	import { tick } from 'svelte';
+
+	let Pagenum: number = 1;
+	const baseUrl = 'https://api.jikan.moe/v4/anime?';
+	let sparam: string = 'order_by=score&sort=desc&genres=9&page=';
+	let sfprm = $derived(baseUrl + sparam + Pagenum.toString());
 
 	let { data }: PageProps = $props();
+
 	let items = data.item.data;
-	let nm2: number = 100;
-	let wvl: string = nm2.toString() + 'px';
+	let loading = false;
+	let hasMore = true;
+
+	async function loadArticles() {
+		if (loading || !hasMore) return;
+		loading = true;
+
+		try {
+			const res = await fetch(sfprm);
+			const newArticles = await res.json();
+
+			//console.log(newArticles);
+
+			if (!res.ok || newArticles.length === 0) {
+				hasMore = false;
+			} else {
+				items = [...items, ...newArticles.data];
+				Pagenum += 1;
+			}
+		} catch (error) {
+			console.error('Loading error :', error);
+			hasMore = false;
+		} finally {
+			loading = false;
+		}
+	}
+
+	function checkInfiniteScroll() {
+		//console.log(itemz);
+		let itemz = document.querySelector('.item-link:nth-last-child(6');
+
+		const observer = new IntersectionObserver((entries) => {
+			entries.forEach((entry) => {
+				if (entry.isIntersecting) {
+					console.log(entry.target);
+				}
+			});
+		}, {});
+
+		if (itemz != null) {
+			//console.log(itemz);
+			observer.observe(itemz);
+		}
+		console.log(itemz);
+	}
+
+	onMount(() => {
+		//loadArticles();
+		checkInfiniteScroll();
+	});
 
 	// search by
 	// genre
@@ -18,7 +73,9 @@
 		<a class="item-link" href={item['url']}>
 			<div class="single-list-item">
 				<img class="item-img" src={item['images']['webp']['large_image_url']} alt={item['title']} />
-				<p class="item-name">{item['title']}</p>
+				<div class="text-part">
+					<p class="item-name">{item['title']}</p>
+				</div>
 			</div>
 		</a>
 	{/each}
@@ -28,6 +85,15 @@
 	.item-link {
 		width: auto;
 		height: auto;
+	}
+
+	.text-part {
+		height: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding-left: 4px;
+		padding-right: 4px;
 	}
 	.full-view {
 		display: flex;
@@ -50,22 +116,26 @@
 		display: flex;
 		padding-bottom: 12px;
 		flex-direction: column;
-		justify-content: center;
-		align-items: center;
 		gap: 12px;
 		border-radius: 10px;
 		background: rgb(43, 43, 96);
 		text-wrap: wrap;
 		width: 278px;
-		height: auto;
+		height: 462px;
+		box-shadow: 12px 12px 16px;
+		transition: scale 0.1s;
+	}
+
+	.single-list-item:hover {
+		scale: 1.1;
 	}
 
 	.item-name {
-		align-self: stretch;
 		color: #fff;
 		text-align: center;
+
 		font-family: Inter;
-		font-size: 12px;
+		font-size: 16px;
 		font-style: normal;
 		font-weight: 400;
 		line-height: normal;
