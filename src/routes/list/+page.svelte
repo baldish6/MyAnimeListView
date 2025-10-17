@@ -1,18 +1,46 @@
 <script lang="ts">
+	import SearchIn from '$lib/searchParam/searchIn.svelte';
 	import type { PageProps } from './$types';
 	import { onMount } from 'svelte';
 	import { tick } from 'svelte';
 
 	let Pagenum: number = $state(1);
 	const baseUrl = 'https://api.jikan.moe/v4/anime?';
-	let sparam: string = 'order_by=score&sort=desc&genres=9&page=';
-	let sfprm = $derived(baseUrl + sparam + Pagenum.toString());
+	let sparam: string = 'order_by=score&sort=desc&page=';
+	let genres: string = $state('');
+	let sfprm = $derived(baseUrl + genres + sparam + Pagenum.toString());
 
 	let { data }: PageProps = $props();
 
 	let items = $state(data.item.data);
 	let loading = false;
 	let hasMore = true;
+
+	/* TODO: 
+		[ ] search params 
+		[ ] smooth scrolling
+		[ ] three ways visualize
+		[ ] single items
+		[ ] add loading
+	*/
+
+	async function updateSearch(newg: string) {
+		Pagenum = 1;
+		genres = newg;
+		checkInfiniteScroll(true);
+		console.log(sfprm);
+		const res = await fetch(sfprm);
+		const newArticles = await res.json();
+		console.log(newArticles);
+		if (!res.ok || newArticles.length === 0) {
+			//items = [];
+		} else {
+			//items = [];
+
+			items = [...newArticles.data];
+			checkInfiniteScroll();
+		}
+	}
 
 	async function loadArticles() {
 		if (loading || !hasMore) return;
@@ -36,8 +64,9 @@
 		}
 	}
 
-	function checkInfiniteScroll() {
+	function checkInfiniteScroll(rm?: boolean) {
 		//console.log(itemz);
+
 		let itemz = document.querySelector('.item-link:nth-last-child(6');
 
 		const observer = new IntersectionObserver((entries) => {
@@ -54,10 +83,13 @@
 				}
 			});
 		}, {});
-
-		if (itemz != null) {
-			//console.log(itemz);
-			observer.observe(itemz);
+		if (rm) {
+			observer.disconnect();
+		} else {
+			if (itemz != null) {
+				//console.log(itemz);
+				observer.observe(itemz);
+			}
 		}
 	}
 
@@ -72,20 +104,30 @@
 	//
 </script>
 
-<div class="full-view">
-	{#each items as item}
-		<a class="item-link" href={item['url']}>
-			<div class="single-list-item">
-				<img class="item-img" src={item['images']['webp']['large_image_url']} alt={item['title']} />
-				<div class="text-part">
-					<p class="item-name">{item['title']}</p>
+<SearchIn {updateSearch} />
+<div class="full-view-full">
+	<div class="full-view">
+		{#each items as item}
+			<a class="item-link" href={item['url']}>
+				<div class="single-list-item">
+					<img
+						class="item-img"
+						src={item['images']['webp']['large_image_url']}
+						alt={item['title']}
+					/>
+					<div class="text-part">
+						<p class="item-name">{item['title']}</p>
+					</div>
 				</div>
-			</div>
-		</a>
-	{/each}
+			</a>
+		{/each}
+	</div>
 </div>
 
 <style>
+	.full-view-full {
+		background-color: rgb(30, 30, 45);
+	}
 	.item-link {
 		width: auto;
 		height: auto;
