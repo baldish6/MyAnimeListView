@@ -3,14 +3,14 @@
 	import { onMount } from 'svelte';
 	import { tick } from 'svelte';
 
-	let Pagenum: number = 1;
+	let Pagenum: number = $state(1);
 	const baseUrl = 'https://api.jikan.moe/v4/anime?';
 	let sparam: string = 'order_by=score&sort=desc&genres=9&page=';
 	let sfprm = $derived(baseUrl + sparam + Pagenum.toString());
 
 	let { data }: PageProps = $props();
 
-	let items = data.item.data;
+	let items = $state(data.item.data);
 	let loading = false;
 	let hasMore = true;
 
@@ -19,16 +19,14 @@
 		loading = true;
 
 		try {
+			Pagenum++;
+			//console.log('url searching : ' + sfprm);
 			const res = await fetch(sfprm);
 			const newArticles = await res.json();
-
-			//console.log(newArticles);
-
 			if (!res.ok || newArticles.length === 0) {
 				hasMore = false;
 			} else {
 				items = [...items, ...newArticles.data];
-				Pagenum += 1;
 			}
 		} catch (error) {
 			console.error('Loading error :', error);
@@ -45,7 +43,14 @@
 		const observer = new IntersectionObserver((entries) => {
 			entries.forEach((entry) => {
 				if (entry.isIntersecting) {
-					console.log(entry.target);
+					observer.unobserve(entry.target);
+					loadArticles();
+
+					let itemz = document.querySelector('.item-link:nth-last-child(6');
+					if (itemz != null) {
+						//console.log(itemz);
+						observer.observe(itemz);
+					}
 				}
 			});
 		}, {});
@@ -54,7 +59,6 @@
 			//console.log(itemz);
 			observer.observe(itemz);
 		}
-		console.log(itemz);
 	}
 
 	onMount(() => {
