@@ -104,7 +104,6 @@
 	//
 </script>
 
-<SearchIn {updateSearch} />
 <div class="full-view-full">
 	<div class="full-view">
 		{#each items as item}
