@@ -140,17 +140,18 @@
 		--scaleV: calc(var(--scaleValue) * 0.1);
 		width: calc(552px / var(--scaleV));
 		height: 100px;
-		overflow-x: auto;
+		overflow: hidden;
 	}
 
 	.single-genre-p {
 		background-color: black;
-		width: 100px;
-		padding: 4px 8px 4px 8px;
 		height: 40px;
+		width: fit-content;
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		border-radius: 8px;
+		white-space: nowrap;
 	}
 
 	/* Row */

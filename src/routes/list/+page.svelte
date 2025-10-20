@@ -173,8 +173,8 @@
 		padding: 48px 80px;
 		justify-content: center;
 		align-items: flex-start;
-		column-gap: 48px;
-		row-gap: 100px;
+		column-gap: 18px;
+		row-gap: 16px;
 		background-color: rgb(30, 30, 45);
 	}
 </style>
