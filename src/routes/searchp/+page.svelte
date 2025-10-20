@@ -6,7 +6,6 @@
 	import RadioBtn from '$lib/Threebutton/RadioBtn.svelte';
 	import FormatBtn from '$lib/Threebutton/RadioBtn.svelte';
 	import Threebtn from '$lib/Threebutton/threebtn.svelte';
-	import { _ChangeBaseUrl } from '../api/animes/+server';
 	import { genresMap, genresList } from './genres';
 
 	//all query symbols

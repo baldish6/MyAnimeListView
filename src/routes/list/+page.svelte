@@ -1,5 +1,7 @@
 <script lang="ts">
 	import Card from '$lib/Card/card.svelte';
+	import Desc from '$lib/Card/desc.svelte';
+	import Row from '$lib/Card/row.svelte';
 	import type { PageProps } from './$types';
 	import { onMount } from 'svelte';
 
@@ -156,7 +158,7 @@
 	</div>
 	<div class="full-view">
 		{#each items as item}
-			<Card {scaleValue} {statusView} {item} />
+			<Row {item} />
 		{/each}
 	</div>
 </div>
