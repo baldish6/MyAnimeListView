@@ -1,4 +1,4 @@
-let baseUrlvalue = 'https://api.jikan.moe/v4/anime?order_by=score&sort=desc&page=1';
+let baseUrlvalue = 'https://api.jikan.moe/v4/anime';
 
 export function getCount() {
 	return baseUrlvalue;

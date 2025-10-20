@@ -1,8 +1,7 @@
 <script lang="ts">
-	import SearchIn from '$lib/searchParam/searchIn.svelte';
+	import Card from '$lib/Card/card.svelte';
 	import type { PageProps } from './$types';
 	import { onMount } from 'svelte';
-	import { tick } from 'svelte';
 
 	let Pagenum: number = $state(1);
 	const baseUrl = 'https://api.jikan.moe/v4/anime?';
@@ -10,15 +9,18 @@
 	let genres: string = $state('');
 	let sfprm = $derived(baseUrl + genres + sparam + Pagenum.toString());
 
+	let pageView: 'card' | '';
+
 	let { data }: PageProps = $props();
 
 	let items = $state(data.item.data);
 	let loading = false;
 	let hasMore = true;
 
+	let statusView: 'card' | 'desc' | 'row' = $state('desc');
+	let scaleValue = $state(11);
+
 	/* TODO: 
-		[ ] search params 
-		[ ] smooth scrolling
 		[ ] three ways visualize
 		[ ] single items
 		[ ] add loading
@@ -102,23 +104,59 @@
 	// genre
 	// date
 	//
+
+	//'card' | 'desc' | 'row'
 </script>
 
 <div class="full-view-full">
+	<div>
+		<input
+			onclick={() => {
+				statusView = 'card';
+			}}
+			type="radio"
+			id="card"
+			name="view"
+			value="card"
+		/>
+		<label id="cardlbl" for="card">card</label><br />
+		<input
+			onclick={() => {
+				statusView = 'desc';
+			}}
+			type="radio"
+			id="desc"
+			name="view"
+			value="desc"
+		/>
+		<label id="desclbl" for="desc">desc</label><br />
+		<input
+			onclick={() => {
+				statusView = 'row';
+			}}
+			type="radio"
+			id="row"
+			name="view"
+			value="row"
+		/>
+		<label id="rowlbl" for="row">row</label>
+	</div>
+
+	<div>
+		<p>{scaleValue}</p>
+		<input
+			type="range"
+			min="10"
+			max="30"
+			step="0.01"
+			bind:value={scaleValue}
+			class="slider"
+			id="myRange"
+		/>
+	</div>
 	<div class="full-view">
 		{#each items as item}
-			<a class="item-link" href={item['url']}>
-				<div class="single-list-item">
-					<img
-						class="item-img"
-						src={item['images']['webp']['large_image_url']}
-						alt={item['title']}
-					/>
-					<div class="text-part">
-						<p class="item-name">{item['title']}</p>
-					</div>
-				</div>
-			</a>
+			<Card {scaleValue} {statusView} {item} />
 		{/each}
 	</div>
 </div>
@@ -127,19 +165,7 @@
 	.full-view-full {
 		background-color: rgb(30, 30, 45);
 	}
-	.item-link {
-		width: auto;
-		height: auto;
-	}
 
-	.text-part {
-		height: 100%;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		padding-left: 4px;
-		padding-right: 4px;
-	}
 	.full-view {
 		display: flex;
 		flex-direction: row;
@@ -150,42 +176,5 @@
 		column-gap: 48px;
 		row-gap: 100px;
 		background-color: rgb(30, 30, 45);
-	}
-
-	.item-img {
-		border-radius: 10px 10px 0px 0px;
-		width: 278px;
-		height: 363px;
-	}
-	.single-list-item {
-		display: flex;
-		padding-bottom: 12px;
-		flex-direction: column;
-		gap: 12px;
-		border-radius: 10px;
-		background: rgb(43, 43, 96);
-		text-wrap: wrap;
-		width: 278px;
-		height: 462px;
-		box-shadow: 12px 12px 16px;
-		transition: scale 0.1s;
-	}
-
-	.single-list-item:hover {
-		scale: 1.1;
-	}
-
-	.item-name {
-		color: #fff;
-		text-align: center;
-
-		font-family: Inter;
-		font-size: 16px;
-		font-style: normal;
-		font-weight: 400;
-		line-height: normal;
-	}
-	.item-name:hover {
-		color: dodgerblue;
 	}
 </style>

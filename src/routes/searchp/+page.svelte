@@ -1,13 +1,16 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import Radiobtn from '$lib/ButtonRadioBox/radiobtn.svelte';
+	import { setCount } from '$lib/searchValueUrl/searchUrlv';
 	import DThreeButton from '$lib/Threebutton/DThreeButton.svelte';
 	import RadioBtn from '$lib/Threebutton/RadioBtn.svelte';
 	import FormatBtn from '$lib/Threebutton/RadioBtn.svelte';
 	import Threebtn from '$lib/Threebutton/threebtn.svelte';
+	import { _ChangeBaseUrl } from '../api/animes/+server';
 	import { genresMap, genresList } from './genres';
 
 	//all query symbols
-	let nameS: string;
+	let nameS: string = $state('');
 	let genres_includeS: number[] = $state([]);
 	let genres_excludeS: number[] = $state([]);
 	const Format_types: string[] = [
@@ -59,6 +62,11 @@
 
 	const tto = () => {
 		let middle_search = '';
+
+		if (nameS != '') {
+			middle_search += '&q=' + nameS;
+		}
+
 		if (genres_includeS.length != 0) {
 			middle_search += '&genres=' + genres_includeS.toString();
 		}
@@ -156,16 +164,11 @@
 		sfwS = !sfwS;
 	};
 
-	const startDate = (e) => {
-		e.preventDefault();
-		start_dateS = e.target.value;
-		//console.log(typeof e.target.value);
-	};
-
-	const endDate = (e) => {
-		e.preventDefault();
-		end_dateS = e.target.value;
-		//console.log(typeof e.target.value);
+	const GoNext = () => {
+		//console.log(goingTostr);
+		//setCount(goingTostr);
+		//_ChangeBaseUrl(goingTostr);
+		goto('/list');
 	};
 </script>
 
@@ -175,6 +178,9 @@
 		<div class="big-boxz-visible">
 			<p>{goingTostr}</p>
 		</div>
+		<button onclick={GoNext} id="nextbtn">Go Next</button><br />
+		<label for="fname">Search by name:</label>
+		<input bind:value={nameS} type="text" id="fname" name="fname" /><br /><br />
 		<div class="genrediv">
 			{#each genresList as item}
 				<DThreeButton name={item} GreenBtn={GreenGenre} RedBtn={RedGenre} WhiteBtn={WhiteGenre} />
@@ -198,7 +204,7 @@
 		<label for="start_date">Start date:</label>
 		<input
 			max={end_dateS}
-			onchange={startDate}
+			bind:value={start_dateS}
 			class="dte"
 			type="date"
 			id="start_date"
@@ -208,7 +214,7 @@
 		<label for="end_date">End date:</label>
 		<input
 			min={start_dateS}
-			onchange={endDate}
+			bind:value={end_dateS}
 			class="dte"
 			type="date"
 			id="end_date"
@@ -234,5 +240,19 @@
 
 	.dte {
 		color: #000;
+	}
+
+	#fname {
+		border-radius: 8px;
+		color: black;
+	}
+
+	#nextbtn {
+		background-color: rgb(71, 76, 181);
+		padding: 4px 8px 4px 8px;
+		border-radius: 4px;
+		width: 140px;
+		height: 60px;
+		font-size: x-large;
 	}
 </style>
