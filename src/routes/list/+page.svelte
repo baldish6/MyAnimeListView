@@ -11,15 +11,13 @@
 	let genres: string = $state('');
 	let sfprm = $derived(baseUrl + genres + sparam + Pagenum.toString());
 
-	let pageView: 'card' | '';
-
 	let { data }: PageProps = $props();
 
 	let items = $state(data.item.data);
 	let loading = false;
 	let hasMore = true;
 
-	let statusView: 'card' | 'desc' | 'row' = $state('desc');
+	let statusView: 'card' | 'desc' | 'row' = $state('card');
 	let scaleValue = $state(11);
 
 	/* TODO: 
@@ -120,6 +118,7 @@
 			id="card"
 			name="view"
 			value="card"
+			checked
 		/>
 		<label id="cardlbl" for="card">card</label><br />
 		<input
@@ -158,7 +157,13 @@
 	</div>
 	<div class="full-view">
 		{#each items as item}
-			<Row {item} />
+			{#if statusView == 'row'}
+				<Row {item} />
+			{:else if statusView == 'desc'}
+				<Desc {item} />
+			{:else}
+				<Card {item} />
+			{/if}
 		{/each}
 	</div>
 </div>

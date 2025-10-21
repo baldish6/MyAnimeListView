@@ -2,7 +2,7 @@
 	let { item } = $props();
 </script>
 
-<a class="item-link" href={item['url']}>
+<a class="item-link" href={'/item/' + item['mal_id']}>
 	<div class="single-list-item-desc card-hover">
 		<img
 			class="item-img-desc"
@@ -59,7 +59,7 @@
 		justify-content: center;
 		gap: 6px;
 		flex-shrink: 0;
-		background: rgb(196, 11, 11);
+		background: rgb(107, 104, 104);
 	}
 
 	/* img */
@@ -69,7 +69,7 @@
 
 	/* name */
 	.item-name-desc {
-		background-color: #29ac15;
+		/*background-color: #29ac15;*/
 		text-align: center;
 	}
 
@@ -86,7 +86,7 @@
 		align-items: left;
 		padding-left: 4px;
 		padding-right: 4px;
-		background: rgb(196, 107, 11);
+		/*background: rgb(196, 107, 11);*/
 	}
 
 	/* genre */
@@ -97,7 +97,7 @@
 		align-items: center;
 
 		gap: 4px;
-		background-color: aqua;
+		/*background-color: aqua;*/
 		width: calc(552px);
 		height: 100px;
 		overflow: hidden;
@@ -119,16 +119,16 @@
 		width: 120px;
 		display: flex;
 		flex-direction: column;
-		background-color: blueviolet;
+		/*background-color: blueviolet;*/
 	}
 
 	/* score */
 	.score-div {
-		background-color: cornflowerblue;
+		/*background-color: cornflowerblue;*/
 	}
 
 	/* airing */
 	.airing-div {
-		background-color: hotpink;
+		/*background-color: hotpink;*/
 	}
 </style>

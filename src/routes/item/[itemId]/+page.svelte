@@ -1,18 +1,22 @@
 <script lang="ts">
 	import type { PageProps } from './$types';
 
-	// naruto : 20
-	// characters casting
-	// episodes lists
-	let need = [
-		//'trailer',
+	let missing = [
+		'trailer',
+		'company staff',
+		'cast characters',
 
-		'studio',
+		'discography ',
+		'opening songs',
+		'endings songs',
 
-		'opening',
-		'endings',
-		'where streaming',
-		'related entry'
+		'episodes names',
+		'each episodes info on a table',
+		'where to watch / streaming',
+		'related entry',
+		'reviews',
+		'add playlist',
+		'add favorites'
 	];
 	let { data }: PageProps = $props();
 
@@ -29,13 +33,15 @@
 		/>
 		<div id="btm-img-info">
 			<div id="btm-img-bx">
-				<div id="num-ep-div">
-					<div id="ep-p">episodes</div>
-
-					<div id="num-ep">
-						{item['episodes']}
+				{#if item['episodes'] != null}
+					<div id="num-ep-div">
+						<div id="ep-p">episodes</div>
+						<div id="num-ep">
+							{item['episodes']}
+						</div>
 					</div>
-				</div>
+				{/if}
+
 				<div id="score-div">
 					<div id="score-p">score</div>
 					<div id="num-score">
@@ -52,17 +58,25 @@
 
 	<div id="right-div">
 		<div class="top-div">
-			<p id="name-p">{item['titles'][0]['title']}</p>
+			<p id="name-p">
+				{#if item['title_english'] != null}
+					{item['title_english']}
+				{:else}
+					{item['titles'][0]['title']}
+				{/if}
+			</p>
 			<div id="desc-div">
 				<p id="desc-p">Description</p>
 				<p>{item['synopsis']}</p>
 			</div>
 
 			<div class="h-[25px]"></div>
-			<div id="back-div">
-				<p id="back-p">background info</p>
-				<p>{item['background']}</p>
-			</div>
+			{#if item['background'] != ''}
+				<div id="back-div">
+					<p id="back-p">background info</p>
+					<p>{item['background']}</p>
+				</div>
+			{/if}
 		</div>
 
 		<hr />
@@ -73,12 +87,15 @@
 			{/each}
 		</div>
 
-		<div class="theme-div">
-			themes : &nbsp;
-			{#each item['themes'] as theme, i}
-				<p class="theme-p">{theme['name']}</p>
-			{/each}
-		</div>
+		{#if item['themes'].length != 0}
+			<div class="theme-div">
+				themes : &nbsp;
+				{#each item['themes'] as theme, i}
+					<p class="theme-p">{theme['name']}</p>
+				{/each}
+			</div>
+		{/if}
+
 		<hr />
 		<div class="prod-div">
 			producers: &nbsp;
@@ -113,6 +130,7 @@
 	.single-div {
 		display: flex;
 		flex-direction: row;
+		max-width: 100vw;
 	}
 
 	#left-div {
@@ -250,6 +268,7 @@
 		display: flex;
 		flex-direction: row;
 		align-items: center;
+		gap: 12px;
 	}
 	#num-box {
 		display: flex;
@@ -259,6 +278,7 @@
 	.prod-div {
 		display: flex;
 		flex-direction: row;
+		white-space: nowrap;
 	}
 
 	.lic-div {

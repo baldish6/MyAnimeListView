@@ -2,7 +2,7 @@
 	let { item } = $props();
 </script>
 
-<a class="item-link" href={item['url']}>
+<a class="item-link" href={'/item/' + item['mal_id']}>
 	<div class="single-list-item-desc card-hover">
 		<img
 			class="item-img-desc"
@@ -42,25 +42,27 @@
 		display: flex;
 		flex-direction: row;
 		border-radius: 8px;
-		width: 878px;
-		height: 462px;
+		width: calc(878px * 1);
+		height: calc(462px * 1);
 		align-items: center;
 		justify-content: center;
 		gap: 6px;
 		flex-shrink: 0;
-		background: rgb(196, 11, 11);
+		background: rgb(75, 70, 70);
 	}
 
 	/* img */
 	.item-img-desc {
 		width: 287px;
-		height: auto;
+		height: 100%;
+		border-radius: 8px 0px 0px 8px;
 	}
 
 	/* name */
 	.item-name-desc {
-		background-color: #29ac15;
+		/*background-color: #29ac15;*/
 		text-align: center;
+		width: 100%;
 	}
 
 	/* description */
@@ -76,7 +78,7 @@
 		align-items: center;
 		padding-left: 4px;
 		padding-right: 4px;
-		background: rgb(196, 107, 11);
+		/*background: rgb(196, 107, 11);*/
 	}
 
 	.scroll-desc {
@@ -93,7 +95,7 @@
 		align-items: center;
 
 		gap: 4px;
-		background-color: aqua;
+		/*background-color: aqua;*/
 		width: calc(552px);
 		height: 100px;
 		overflow: hidden;
@@ -101,12 +103,13 @@
 
 	.single-genre-p {
 		background-color: black;
-		height: 40px;
+		height: fit-content;
 		width: fit-content;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		border-radius: 8px;
 		white-space: nowrap;
+		padding: 4px;
 	}
 </style>

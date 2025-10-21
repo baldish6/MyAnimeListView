@@ -2,7 +2,7 @@
 	let { item } = $props();
 </script>
 
-<a class="item-link" href={item['url']}>
+<a class="item-link" href={'/item/' + item['mal_id']}>
 	<div class="single-list-item-card card-hover">
 		<img
 			class="item-img-card"
